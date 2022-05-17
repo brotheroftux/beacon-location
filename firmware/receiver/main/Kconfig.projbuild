@@ -1,0 +1,7 @@
+menu "WiFi Configuration"
+    config RECEIVER_WIFI_SSID
+        string "SSID"
+
+    config RECEIVER_WIFI_PASSWORD
+        string "Password"
+endmenu
