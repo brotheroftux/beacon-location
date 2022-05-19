@@ -8,7 +8,8 @@ import io.ktor.server.locations.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
-import org.brotheroftux.locationservice.domain.model.ScanEventList
+import org.brotheroftux.locationservice.application.utils.*
+import org.brotheroftux.locationservice.domain.model.*
 
 fun Application.configureRouting() {
     install(Locations)
@@ -30,7 +31,7 @@ fun Application.configureRouting() {
         put("/events") {
             val events = call.receive<ScanEventList>()
 
-            println(events)
+            println("Receiver with address = ${events.addr.bleAddrToString()} pushed events = $events")
 
             call.respond(HttpStatusCode.OK)
         }

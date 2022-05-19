@@ -124,12 +124,12 @@ static const ProtobufCFieldDescriptor scan_event_descriptor__field_descriptors[3
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "rssi",
+    "distance",
     3,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_DOUBLE,
     0,   /* quantifier_offset */
-    offsetof(ScanEventDescriptor, rssi),
+    offsetof(ScanEventDescriptor, distance),
     NULL,
     NULL,
     0,             /* flags */
@@ -138,8 +138,8 @@ static const ProtobufCFieldDescriptor scan_event_descriptor__field_descriptors[3
 };
 static const unsigned scan_event_descriptor__field_indices_by_name[] = {
   0,   /* field[0] = addr */
+  2,   /* field[2] = distance */
   1,   /* field[1] = name */
-  2,   /* field[2] = rssi */
 };
 static const ProtobufCIntRange scan_event_descriptor__number_ranges[1 + 1] =
 {
@@ -161,7 +161,7 @@ const ProtobufCMessageDescriptor scan_event_descriptor__descriptor =
   (ProtobufCMessageInit) scan_event_descriptor__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor scan_event_list__field_descriptors[1] =
+static const ProtobufCFieldDescriptor scan_event_list__field_descriptors[3] =
 {
   {
     "events",
@@ -175,14 +175,40 @@ static const ProtobufCFieldDescriptor scan_event_list__field_descriptors[1] =
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
+  {
+    "ts",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT64,
+    0,   /* quantifier_offset */
+    offsetof(ScanEventList, ts),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "addr",
+    3,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_BYTES,
+    0,   /* quantifier_offset */
+    offsetof(ScanEventList, addr),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
 };
 static const unsigned scan_event_list__field_indices_by_name[] = {
+  2,   /* field[2] = addr */
   0,   /* field[0] = events */
+  1,   /* field[1] = ts */
 };
 static const ProtobufCIntRange scan_event_list__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 1 }
+  { 0, 3 }
 };
 const ProtobufCMessageDescriptor scan_event_list__descriptor =
 {
@@ -192,7 +218,7 @@ const ProtobufCMessageDescriptor scan_event_list__descriptor =
   "ScanEventList",
   "",
   sizeof(ScanEventList),
-  1,
+  3,
   scan_event_list__field_descriptors,
   scan_event_list__field_indices_by_name,
   1,  scan_event_list__number_ranges,

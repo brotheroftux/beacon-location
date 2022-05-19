@@ -13,6 +13,8 @@ typedef struct scan_evts {
     size_t count;
 } scan_evts_t;
 
-void scan_evt_store_init();
+void scan_evt_store_init(void);
 void scan_evt_store_add(struct ble_gap_disc_desc *disc_evt);
 void scan_evt_store_get_evts(scan_evts_t *evts_out);
+void scan_evt_store_sync(const uint8_t *own_addr);
+

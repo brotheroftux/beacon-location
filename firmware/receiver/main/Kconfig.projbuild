@@ -5,3 +5,8 @@ menu "WiFi Configuration"
     config RECEIVER_WIFI_PASSWORD
         string "Password"
 endmenu
+
+menu "Location Service Sync Configuration"
+    config RECEIVER_EVTDUMP_ENDPOINT
+        string "Endpoint to dump events to"
+endmenu

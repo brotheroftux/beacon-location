@@ -38,10 +38,16 @@ static int scan_callback(struct ble_gap_event *event, __attribute__((unused)) vo
             return 0;
         case BLE_GAP_EVENT_DISC_COMPLETE:
             RECEIVER_FIRM_LOG(ESP_LOG_INFO, "BLE_GAP_EVENT_DISC_COMPLETE");
-            scan_evts_t evts;
+//            scan_evts_t evts;
+//
+//            scan_evt_store_get_evts(&evts);
+//            log_disc_evts(&evts);
 
-            scan_evt_store_get_evts(&evts);
-            log_disc_evts(&evts);
+            uint8_t *addr = malloc(sizeof(uint8_t) * 6);
+
+            ble_hs_id_copy_addr(own_addr_type, addr, NULL);
+            scan_evt_store_sync(addr);
+            free(addr);
 
             return 0;
         default:

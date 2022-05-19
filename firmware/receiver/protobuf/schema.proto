@@ -5,11 +5,13 @@ syntax = "proto2";
 message ScanEventDescriptor {
   required bytes addr = 1;
   required string name = 2;
-  required int32 rssi = 3;
+  required double distance = 3;
 }
 
 // serial name 'org.brotheroftux.locationservice.domain.model.ScanEventList'
 message ScanEventList {
   // WARNING: a default value decoded when value is missing
   repeated ScanEventDescriptor events = 1;
+  required int64 ts = 2;
+  required bytes addr = 3;
 }

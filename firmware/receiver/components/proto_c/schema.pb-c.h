@@ -32,7 +32,7 @@ struct  ScanEventDescriptor
   ProtobufCMessage base;
   ProtobufCBinaryData addr;
   char *name;
-  int32_t rssi;
+  double distance;
 };
 #define SCAN_EVENT_DESCRIPTOR__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&scan_event_descriptor__descriptor) \
@@ -50,10 +50,12 @@ struct  ScanEventList
    */
   size_t n_events;
   ScanEventDescriptor **events;
+  int64_t ts;
+  ProtobufCBinaryData addr;
 };
 #define SCAN_EVENT_LIST__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&scan_event_list__descriptor) \
-    , 0,NULL }
+    , 0,NULL, 0, {0,NULL} }
 
 
 /* ScanEventDescriptor methods */
