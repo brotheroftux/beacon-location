@@ -118,7 +118,7 @@ void receiver_wifi_connect(void) {
             portMAX_DELAY);
 
     sta_connect();
-    WIFI_LOG(ESP_LOG_INFO, "Successfully connected to specified AP");
+    WIFI_LOG(ESP_LOG_INFO, "Successfully connected to the specified AP");
 
     vEventGroupDelete(wifi_event_group_handle);
 }

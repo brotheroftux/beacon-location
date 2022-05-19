@@ -12,8 +12,8 @@
     )
 
 void print_addr(uint8_t *addr) {
-    for (uint8_t i = 0; i < 6; i++) {
-        printf(i == 5 ? "%02x" : "%02x:", addr[i]);
+    for (int8_t i = 5; i >= 0; i--) {
+        printf(i == 0 ? "%02x" : "%02x:", addr[i]);
     }
 
     printf("\n");

@@ -1,1 +1,1 @@
-idf_component_register(SRCS "messages.pb-c.c" INCLUDE_DIRS . PRIV_REQUIRES protobuf-c)
+idf_component_register(SRCS "schema.pb-c.c" INCLUDE_DIRS . PRIV_REQUIRES protobuf-c)

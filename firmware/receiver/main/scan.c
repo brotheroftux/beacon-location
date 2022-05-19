@@ -19,10 +19,12 @@ static struct nimble_thin_init_opts wrapper_init_opts = {
 static void log_disc_evts(scan_evts_t *list) {
     size_t evt_count = list->count;
 
-    RECEIVER_FIRM_LOG(ESP_LOG_INFO, "Got %d scan event(s)", evt_count);
+    RECEIVER_FIRM_LOG(ESP_LOG_INFO, "Found %d compatible beacon(s)", evt_count);
 
     for (size_t i = 0; i < evt_count; i++) {
-        RECEIVER_FIRM_LOG(ESP_LOG_INFO, "Event #%d, rssi = %d dBm", i + 1, list->evts[i]->rssi);
+        scan_evt_descriptor_t *evt = list->evts[i];
+
+        RECEIVER_FIRM_LOG(ESP_LOG_INFO, "Beacon #%d, device name = %s, rssi = %d dBm", i + 1, evt->name, evt->rssi);
         print_addr(list->evts[i]->addr);
     }
 }
