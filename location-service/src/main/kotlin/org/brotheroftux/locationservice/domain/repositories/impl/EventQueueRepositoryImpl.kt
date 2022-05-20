@@ -13,7 +13,7 @@ object EventQueueRepositoryImpl : EventQueueRepository {
         receiverAddress = row[EventQueue.receiverAddress].bleAddrToString(),
         beaconAddress = row[EventQueue.beaconAddress].bleAddrToString(),
         distance = row[EventQueue.distance],
-        eventTimestamp = row[EventQueue.eventTimestamp]
+        eventTimestamp = row[EventQueue.eventTimestamp],
     )
 
     override suspend fun push(events: List<QueueEvent>) {

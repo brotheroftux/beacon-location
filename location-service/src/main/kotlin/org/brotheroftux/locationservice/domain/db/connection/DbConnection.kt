@@ -14,7 +14,7 @@ private const val jdbcURL = "jdbc:h2:file:./build/db"
 private const val driverClassName = "org.h2.Driver"
 
 object DbConnection {
-    val db by lazy {
+    private val db by lazy {
         Database.connect(jdbcURL, driverClassName)
     }
 
