@@ -2,7 +2,8 @@
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.schema.ProtoBufSchemaGenerator
-import org.brotheroftux.locationservice.domain.model.*
+import org.brotheroftux.locationservice.domain.model.firmware.ScanEventDescriptor
+import org.brotheroftux.locationservice.domain.model.firmware.ScanEventList
 import java.io.File
 
 val descriptors = listOf(ScanEventDescriptor.serializer().descriptor, ScanEventList.serializer().descriptor)

@@ -1,4 +1,4 @@
-package org.brotheroftux.locationservice.domain.model
+package org.brotheroftux.locationservice.domain.model.firmware
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
