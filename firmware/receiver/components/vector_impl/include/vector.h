@@ -17,7 +17,10 @@ typedef struct basic_vector {
     size_t capacity;
 } basic_vector_t;
 
+typedef void dealloc(void *);
+
 void vector_reserve(basic_vector_t *v, size_t new_cap);
 void vector_push_back(basic_vector_t *v, void *item);
+void vector_clear(basic_vector_t *v, dealloc *dealloc_fn);
 
 basic_vector_t *vector_alloc();

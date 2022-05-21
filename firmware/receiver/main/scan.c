@@ -16,19 +16,6 @@ static struct nimble_thin_init_opts wrapper_init_opts = {
         .sm_io_caps = BLE_SM_IO_CAP_NO_IO,
 };
 
-static void log_disc_evts(scan_evts_t *list) {
-    size_t evt_count = list->count;
-
-    RECEIVER_FIRM_LOG(ESP_LOG_INFO, "Found %d compatible beacon(s)", evt_count);
-
-    for (size_t i = 0; i < evt_count; i++) {
-        scan_evt_descriptor_t *evt = list->evts[i];
-
-        RECEIVER_FIRM_LOG(ESP_LOG_INFO, "Beacon #%d, device name = %s, rssi = %d dBm", i + 1, evt->name, evt->rssi);
-        print_addr(list->evts[i]->addr);
-    }
-}
-
 static int scan_callback(struct ble_gap_event *event, __attribute__((unused)) void *arg) {
     switch (event->type) {
         case BLE_GAP_EVENT_DISC:
@@ -38,16 +25,14 @@ static int scan_callback(struct ble_gap_event *event, __attribute__((unused)) vo
             return 0;
         case BLE_GAP_EVENT_DISC_COMPLETE:
             RECEIVER_FIRM_LOG(ESP_LOG_INFO, "BLE_GAP_EVENT_DISC_COMPLETE");
-//            scan_evts_t evts;
-//
-//            scan_evt_store_get_evts(&evts);
-//            log_disc_evts(&evts);
 
             uint8_t *addr = malloc(sizeof(uint8_t) * 6);
 
             ble_hs_id_copy_addr(own_addr_type, addr, NULL);
             scan_evt_store_sync(addr);
             free(addr);
+
+            scan();
 
             return 0;
         default:

@@ -7,7 +7,7 @@ import kotlinx.serialization.protobuf.*
 @Serializable
 data class ScanEventDescriptor @OptIn(ExperimentalSerializationApi::class) constructor(
     @ProtoNumber(1) val addr: ByteArray,
-    @ProtoNumber(2) val name: String,
+    @ProtoNumber(2) val ts: Long,
     @ProtoNumber(3) val distance: Double,
 ) {
     override fun equals(other: Any?): Boolean {
@@ -17,7 +17,7 @@ data class ScanEventDescriptor @OptIn(ExperimentalSerializationApi::class) const
         other as ScanEventDescriptor
 
         if (!addr.contentEquals(other.addr)) return false
-        if (name != other.name) return false
+        if (ts != other.ts) return false
         if (distance != other.distance) return false
 
         return true
@@ -25,7 +25,7 @@ data class ScanEventDescriptor @OptIn(ExperimentalSerializationApi::class) const
 
     override fun hashCode(): Int {
         var result = addr.contentHashCode()
-        result = 31 * result + name.hashCode()
+        result = 31 * result + ts.hashCode()
         result = 31 * result + distance.hashCode()
         return result
     }

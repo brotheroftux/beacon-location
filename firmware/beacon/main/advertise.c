@@ -2,6 +2,7 @@
 
 #include "host/ble_gap.h"
 #include "services/gap/ble_svc_gap.h"
+#include "nvs_flash.h"
 
 #include "nimble_thin_wrapper.h"
 
@@ -36,6 +37,8 @@ static void beacon_adv_start(void) {
             .name = (uint8_t *) name,
             .name_len = strlen(name),
             .name_is_complete = 1,
+            .tx_pwr_lvl_is_present = 1,
+            .tx_pwr_lvl = -80,
     };
 
     int rc = ble_gap_adv_set_fields(&fields);
@@ -69,5 +72,15 @@ static struct nimble_thin_init_opts wrapper_init_opts = {
 };
 
 void app_main(void) {
+    BEACON_FIRM_LOG(ESP_LOG_INFO, "Initializing NVS...");
+    esp_err_t nvs_init_rc = nvs_flash_init();
+
+    if (nvs_init_rc == ESP_ERR_NVS_NO_FREE_PAGES || nvs_init_rc == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        nvs_init_rc = nvs_flash_init();
+    }
+
+    ESP_ERROR_CHECK(nvs_init_rc);
+    
     nimble_thin_init(&wrapper_init_opts, &beacon_own_addr_type);
 }

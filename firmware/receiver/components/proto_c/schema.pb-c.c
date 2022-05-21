@@ -112,12 +112,12 @@ static const ProtobufCFieldDescriptor scan_event_descriptor__field_descriptors[3
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "name",
+    "ts",
     2,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_STRING,
+    PROTOBUF_C_TYPE_INT64,
     0,   /* quantifier_offset */
-    offsetof(ScanEventDescriptor, name),
+    offsetof(ScanEventDescriptor, ts),
     NULL,
     NULL,
     0,             /* flags */
@@ -139,7 +139,7 @@ static const ProtobufCFieldDescriptor scan_event_descriptor__field_descriptors[3
 static const unsigned scan_event_descriptor__field_indices_by_name[] = {
   0,   /* field[0] = addr */
   2,   /* field[2] = distance */
-  1,   /* field[1] = name */
+  1,   /* field[1] = ts */
 };
 static const ProtobufCIntRange scan_event_descriptor__number_ranges[1 + 1] =
 {

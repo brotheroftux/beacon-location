@@ -10,16 +10,14 @@ import org.brotheroftux.locationservice.application.services.queuemanager.launch
 import org.brotheroftux.locationservice.application.services.queuemanager.makeEventChannelProducer
 import org.brotheroftux.locationservice.domain.db.connection.DbConnection
 
-fun main() {
+fun main(): Unit = runBlocking {
+    val eventChannel = makeEventChannelProducer()
+    launchEventQueueConsumer(eventChannel)
+
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
         DbConnection.init()
         configureRouting()
         configureSerialization()
         configureSockets()
     }.start(wait = true)
-
-    runBlocking {
-        val eventChannel = makeEventChannelProducer()
-        launchEventQueueConsumer(eventChannel)
-    }
 }

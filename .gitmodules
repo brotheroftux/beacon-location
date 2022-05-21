@@ -1,0 +1,3 @@
+[submodule "firmware/receiver/components/kalman_filter/SimpleKalmanFilter"]
+	path = firmware/receiver/components/kalman_filter/SimpleKalmanFilter
+	url = https://github.com/denyssene/SimpleKalmanFilter

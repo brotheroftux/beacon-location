@@ -2,7 +2,7 @@
 #include "malloc.h"
 #include "vector.h"
 
-#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MIN(a, b) (((a)<(b))?(a):(b))
 
 void vector_reserve(basic_vector_t *v, size_t new_cap) {
     void **new_alloc = malloc(new_cap * sizeof(void *));
@@ -31,4 +31,15 @@ basic_vector_t *vector_alloc(size_t cap) {
     memcpy(v, &v_init, sizeof(basic_vector_t));
 
     return v;
+}
+
+void vector_clear(basic_vector_t *v, dealloc *dealloc_fn) {
+    if (dealloc_fn == NULL) goto skip;
+
+    for (size_t i = 0; i < v->size; i++) {
+        dealloc_fn(v->items[i]);
+    }
+
+    skip:
+    v->size = 0;
 }

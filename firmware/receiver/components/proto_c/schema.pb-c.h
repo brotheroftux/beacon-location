@@ -25,22 +25,22 @@ typedef struct ScanEventList ScanEventList;
 /* --- messages --- */
 
 /*
- * serial name 'org.brotheroftux.locationservice.domain.model.ScanEventDescriptor'
+ * serial name 'org.brotheroftux.locationservice.domain.model.firmware.ScanEventDescriptor'
  */
 struct  ScanEventDescriptor
 {
   ProtobufCMessage base;
   ProtobufCBinaryData addr;
-  char *name;
+  int64_t ts;
   double distance;
 };
 #define SCAN_EVENT_DESCRIPTOR__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&scan_event_descriptor__descriptor) \
-    , {0,NULL}, NULL, 0 }
+    , {0,NULL}, 0, 0 }
 
 
 /*
- * serial name 'org.brotheroftux.locationservice.domain.model.ScanEventList'
+ * serial name 'org.brotheroftux.locationservice.domain.model.firmware.ScanEventList'
  */
 struct  ScanEventList
 {

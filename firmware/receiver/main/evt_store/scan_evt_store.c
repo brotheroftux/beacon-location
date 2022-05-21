@@ -1,6 +1,7 @@
 #include "scan_evt_store.h"
 #include "vector.h"
 #include "schema.pb-c.h"
+#include "eval_distance.h"
 
 #include "esp_http_client.h"
 
@@ -23,23 +24,13 @@ static esp_http_client_config_t http_client_config = {
 static esp_http_client_handle_t http_client_handle = NULL;
 static basic_vector_t evt_storage = MAKE_VECTOR();
 
-static ScanEventDescriptor *convert_to_desc(struct ble_gap_disc_desc *disc_evt) {
-    struct ble_hs_adv_fields fields;
-
+static ScanEventDescriptor *convert_to_desc(struct ble_gap_disc_desc *disc_evt, struct ble_hs_adv_fields *fields) {
+    ScanEventDescriptor *desc = malloc(sizeof(ScanEventDescriptor));
     uint8_t *addr_copy = malloc(6 * sizeof(uint8_t));
-    char *local_name = "__unspecified";
-
-    ble_hs_adv_parse_fields(&fields, disc_evt->data, disc_evt->length_data);
+    time_t current_ts;
 
     memcpy(addr_copy, disc_evt->addr.val, 6);
 
-    if (fields.name_len > 0 && fields.name_is_complete && fields.name != NULL) {
-        local_name = malloc(sizeof(char) * (fields.name_len + 1));
-        memcpy(local_name, fields.name, fields.name_len);
-        local_name[fields.name_len] = '\0';
-    }
-
-    ScanEventDescriptor *desc = malloc(sizeof(ScanEventDescriptor));
     ProtobufCBinaryData addr_field = {
             .data = addr_copy,
             .len = 6
@@ -47,11 +38,24 @@ static ScanEventDescriptor *convert_to_desc(struct ble_gap_disc_desc *disc_evt) 
 
     scan_event_descriptor__init(desc);
 
+    float distance = fields->tx_pwr_lvl_is_present
+                     ? eval_distance(addr_copy, disc_evt->rssi, fields->tx_pwr_lvl)
+                     : 0;
+
+    time(&current_ts);
+
     desc->addr = addr_field;
-    desc->name = local_name;
-    desc->distance = 69.69f;
+    desc->ts = current_ts;
+    desc->distance = distance;
 
     return desc;
+}
+
+static void free_desc(void *desc) {
+    ScanEventDescriptor *desc_cast = desc;
+
+    free(desc_cast->addr.data);
+    free(desc_cast);
 }
 
 void scan_evt_store_init(void) {
@@ -68,18 +72,15 @@ void scan_evt_store_init(void) {
 }
 
 void scan_evt_store_add(struct ble_gap_disc_desc *disc_evt) {
-    ScanEventDescriptor *desc = convert_to_desc(disc_evt);
+    struct ble_hs_adv_fields fields;
+    ble_hs_adv_parse_fields(&fields, disc_evt->data, disc_evt->length_data);
 
-    if (strcmp(desc->name, "nimble-beacon") == 0) {
+    if (fields.name_is_complete && memcmp(fields.name, "nimble-beacon", fields.name_len) == 0) {
+        ScanEventDescriptor *desc = convert_to_desc(disc_evt, &fields);
+
         vector_push_back(&evt_storage, desc);
     }
 }
-
-void scan_evt_store_get_evts(scan_evts_t *evts_out) {
-    evts_out->count = evt_storage.size;
-    evts_out->evts = (scan_evt_descriptor_t **) evt_storage.items;
-}
-
 
 void scan_evt_store_sync(const uint8_t *own_addr) {
     ScanEventList evt_list;
@@ -123,4 +124,6 @@ void scan_evt_store_sync(const uint8_t *own_addr) {
     SCAN_EVT_STORE_LOG(ESP_LOG_INFO, "Scheduled event sync: success");
     SCAN_EVT_STORE_LOG(ESP_LOG_INFO, "Endpoint responded with status = %d",
                        esp_http_client_get_status_code(http_client_handle));
+
+    vector_clear(&evt_storage, free_desc);
 }
