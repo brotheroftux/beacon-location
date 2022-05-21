@@ -5,6 +5,7 @@ import org.brotheroftux.locationservice.domain.model.service.ReceiverConfig
 interface ReceiverConfigRepository {
     suspend fun allConfiguredReceiverCoords(): List<ReceiverConfig>
     suspend fun configuredReceiverCoordsByAddress(address: String): ReceiverConfig?
+    suspend fun configuredReceiversByAddresses(addresses: List<String>): List<ReceiverConfig>
     suspend fun updateConfiguredReceiverCoords(newConfig: ReceiverConfig)
     suspend fun batchUpdateConfiguredReceiverCoords(updated: List<ReceiverConfig>)
 }

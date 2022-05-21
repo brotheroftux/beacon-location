@@ -24,6 +24,14 @@ object ReceiverConfigRepositoryImpl : ReceiverConfigRepository {
             .singleOrNull()
     }
 
+    override suspend fun configuredReceiversByAddresses(addresses: List<String>): List<ReceiverConfig> =
+        DbConnection.dbQuery {
+            addresses
+                .map { it.bleAddrToByteArray() }
+                .let { ReceiverCoords.select { ReceiverCoords.addr inList it } }
+                .map(::rowToReceiverConfig)
+        }
+
     override suspend fun updateConfiguredReceiverCoords(newConfig: ReceiverConfig): Unit = DbConnection.dbQuery {
         ReceiverCoords.update({ ReceiverCoords.addr eq newConfig.addr.bleAddrToByteArray() }) {
             it[posX] = newConfig.posX
@@ -31,7 +39,7 @@ object ReceiverConfigRepositoryImpl : ReceiverConfigRepository {
         }
     }
 
-    override suspend fun batchUpdateConfiguredReceiverCoords(updated: List<ReceiverConfig>) {
+    override suspend fun batchUpdateConfiguredReceiverCoords(updated: List<ReceiverConfig>): Unit =
         DbConnection.dbQuery {
             ReceiverCoords.batchReplace(updated) {
                 this[ReceiverCoords.addr] = it.addr.bleAddrToByteArray()
@@ -39,5 +47,5 @@ object ReceiverConfigRepositoryImpl : ReceiverConfigRepository {
                 this[ReceiverCoords.posY] = it.posY
             }
         }
-    }
+
 }

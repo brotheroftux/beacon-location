@@ -16,14 +16,16 @@ object EventQueueRepositoryImpl : EventQueueRepository {
         eventTimestamp = row[EventQueue.eventTimestamp],
     )
 
-    override suspend fun push(events: List<QueueEvent>) {
-        DbConnection.dbQuery {
-            EventQueue.batchInsert(events) {
-                this[EventQueue.receiverAddress] = it.receiverAddress.bleAddrToByteArray()
-                this[EventQueue.beaconAddress] = it.beaconAddress.bleAddrToByteArray()
-                this[EventQueue.distance] = it.distance
-                this[EventQueue.eventTimestamp] = it.eventTimestamp
-            }
+    override suspend fun push(events: List<QueueEvent>): Unit = DbConnection.dbQuery {
+        EventQueue.batchInsert(events) {
+            this[EventQueue.receiverAddress] = it.receiverAddress.bleAddrToByteArray()
+            this[EventQueue.beaconAddress] = it.beaconAddress.bleAddrToByteArray()
+            this[EventQueue.distance] = it.distance
+            this[EventQueue.eventTimestamp] = it.eventTimestamp
         }
+    }
+
+    override suspend fun poll(): List<QueueEvent> = DbConnection.dbQuery {
+        EventQueue.selectAll().map(::rowToQueueEvent).also { EventQueue.deleteAll() }
     }
 }
